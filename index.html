@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seoul Bakery Gifts - Etsy Exporter SaaS</title>
+  <meta name="description" content="Etsy 해외 수출 셀러를 위한 PrintBakery 소싱 및 우체국 EMS 프리미엄 배송 최적화 관리 시스템">
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-container">
+        <div class="logo-icon">SB</div>
+        <div>
+          <span class="logo-text">SEOUL BAKERY</span>
+          <span class="logo-sub">Gifts & Exporter</span>
+        </div>
+      </div>
+      
+      <nav class="nav-menu">
+        <li class="nav-item active" id="nav-dashboard" onclick="app.navigate('dashboard')">
+          <a href="#">
+            <svg viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm7 7v-5h4v5h-4zm2-15.586l6 6V20h-2v-5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v5H6v-9.586l6-6z"/></svg>
+            <span>대시보드</span>
+          </a>
+        </li>
+        <li class="nav-item" id="nav-sourcing" onclick="app.navigate('sourcing')">
+          <a href="#">
+            <svg viewBox="0 0 24 24"><path d="M21.822 7.431A1 1 0 0 0 21 7H3a1 1 0 0 0-.822.431 1 1 0 0 0 .011 1.102l9 12a1 1 0 0 0 1.622 0l9-12a1 1 0 0 0 .011-1.102zM12 18.306l-6.23-8.306h12.46L12 18.306zM19 3H5c-1.103 0-2 .897-2 2v1h18V5c0-1.103-.897-2-2-2z"/></svg>
+            <span>소싱 상품 관리</span>
+          </a>
+        </li>
+        <li class="nav-item" id="nav-orders" onclick="app.navigate('orders')">
+          <a href="#">
+            <svg viewBox="0 0 24 24"><path d="M19 10h-2V5c0-1.103-.897-2-2-2H9c-1.103 0-2 .897-2 2v5H5c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2zM9 5h6v5H9V5zm10 15H5v-8h2v1c0 1.103.897 2 2 2h6c1.103 0 2-.897 2-2v-1h2v8z"/></svg>
+            <span>주문 및 배송 관리</span>
+          </a>
+        </li>
+        <li class="nav-item" id="nav-settings" onclick="app.navigate('settings')">
+          <a href="#">
+            <svg viewBox="0 0 24 24"><path d="M12 16c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm0-6c1.103 0 2 .897 2 2s-.897 2-2 2-2-.897-2-2 .897-2 2-2z"/><path d="m19.16 12.92.08-.92-.08-.92 2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a8.39 8.39 0 0 0-1.6-0.92l-.38-2.65A.48.48 0 0 0 14 3h-4a.48.48 0 0 0-.49.42l-.38 2.65a8.39 8.39 0 0 0-1.6.92l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.64L5.66 11l-.08.92.08.92-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46a.5.5 0 0 0 .61.22l2.49-1a8.39 8.39 0 0 0 1.6.92l.38 2.65a.48.48 0 0 0 .49.42h4a.48.48 0 0 0 .49-.42l.38-2.65a8.39 8.39 0 0 0 1.6-.92l2.49 1a.5.5 0 0 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.64l-2.11-1.65zM12 19a7 7 0 1 1 7-7 7.008 7.008 0 0 1-7 7z"/></svg>
+            <span>시스템 설정</span>
+          </a>
+        </li>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="exchange-widget">
+          <span class="exchange-title">적용 환율 (USD/KRW)</span>
+          <span class="exchange-rate" id="sidebar-exchange-rate">1,380 원</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      
+      <!-- ================= 1. DASHBOARD VIEW ================= -->
+      <section id="view-dashboard" class="page-view">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>대시보드</h1>
+            <p>Etsy 수출 샵의 종합 현황과 매출 실적 분석</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary" onclick="app.openBookmarkletModal()">북마크클릿 설치</button>
+            <button class="btn btn-primary" onclick="app.openProductModal()">신규 상품 소싱</button>
+          </div>
+        </div>
+        
+        <!-- KPI 지표 그리드 -->
+        <div class="stats-grid mt-1">
+          <div class="glass-card stat-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+              <span class="stat-label">누적 매출액</span>
+              <span style="font-size:1.4rem;">💰</span>
+            </div>
+            <span class="stat-value text-cyan" id="stat-total-sales">$0.00</span>
+            <span class="stat-subtext">총 주문 <span id="stat-order-count">0</span>건</span>
+          </div>
+          <div class="glass-card stat-card green">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+              <span class="stat-label">누적 순이익</span>
+              <span style="font-size:1.4rem;">📈</span>
+            </div>
+            <span class="stat-value text-green" id="stat-total-profit">0 원</span>
+            <span class="stat-subtext">평균 수익률 <span id="stat-average-margin" class="text-green">0%</span></span>
+          </div>
+          <div class="glass-card stat-card blue">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+              <span class="stat-label">소싱 품목 수</span>
+              <span style="font-size:1.4rem;">🛍️</span>
+            </div>
+            <span class="stat-value" id="stat-product-count">0</span>
+            <span class="stat-subtext">활성 리스팅 <span id="stat-active-listings" class="text-cyan">0</span>개</span>
+          </div>
+          <div class="glass-card stat-card yellow">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+              <span class="stat-label">배송 대기</span>
+              <span style="font-size:1.4rem;">📦</span>
+            </div>
+            <span class="stat-value text-yellow" id="stat-pending-orders">0</span>
+            <span class="stat-subtext">우체국 접수 대기 상태</span>
+          </div>
+        </div>
+        
+        <!-- 분석 차트 및 업무 현황 그리드 -->
+        <div class="dashboard-grid mt-1">
+          <div class="glass-card">
+            <div class="card-title">
+              <span>📊 월별 매출 &amp; 순이익 트렌드</span>
+              <span style="font-size:0.72rem; background:rgba(124,58,237,0.12); color:var(--primary-light); padding:0.25rem 0.65rem; border-radius:20px; font-weight:600;">최근 6개월</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="profitChart"></canvas>
+            </div>
+          </div>
+          
+          <div class="glass-card">
+            <div class="card-title">
+              <span>✅ 주요 업무 현황</span>
+              <span style="font-size:0.72rem; background:rgba(16,185,129,0.12); color:var(--accent-green); padding:0.25rem 0.65rem; border-radius:20px; font-weight:600;">To-Do</span>
+            </div>
+            <div class="activity-list" id="dashboard-todo-list">
+              <!-- JS에서 할일 목록 동적 생성 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 최근 소싱된 상품 퀵뷰 -->
+        <div class="glass-card mt-1">
+          <div class="card-title">
+            <span>🛒 최근 소싱 상품</span>
+            <button class="btn btn-secondary" style="padding:0.25rem 0.75rem; font-size:0.8rem;" onclick="app.navigate('sourcing')">전체 보기 →</button>
+          </div>
+          <div class="product-grid" id="dashboard-recent-products" style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem;">
+            <!-- JS에서 동적 생성 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. SOURCING MANAGER VIEW ================= -->
+      <section id="view-sourcing" class="page-view hidden">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>소싱 상품 관리</h1>
+            <p>PrintBakery 소싱 정보 및 Etsy 리스팅 메타데이터 관리</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="app.openProductModal()">소싱 상품 등록</button>
+          </div>
+        </div>
+        
+        <!-- 검색 및 필터 바 -->
+        <div class="filter-row mt-1">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="sourcing-search-input" placeholder="상품명 또는 작가명 검색..." oninput="app.renderSourcingList()">
+          </div>
+          <div>
+            <select id="sourcing-status-filter" onchange="app.renderSourcingList()">
+              <option value="All">전체 상태</option>
+              <option value="Active">Etsy 판매중 (Active)</option>
+              <option value="Draft">작성중 (Draft)</option>
+              <option value="Out of Stock">품절 (Out of Stock)</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- 상품 리스트 그리드 -->
+        <div class="product-grid" id="sourcing-products-container">
+          <!-- JS에서 상품 카드 동적 생성 -->
+        </div>
+      </section>
+
+      <!-- ================= 3. ORDERS VIEW ================= -->
+      <section id="view-orders" class="page-view hidden">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>주문 및 배송 관리</h1>
+            <p>Etsy 접수 주문 처리 상태 및 우체국 EMS 프리미엄 배송 처리</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary" onclick="app.openShippingCalcModal()">배송비 계산기</button>
+            <button class="btn btn-primary" onclick="app.openOrderModal()">Etsy 주문 추가</button>
+          </div>
+        </div>
+        
+        <!-- 주문 검색 및 배송 상태 요약 정보 -->
+        <div class="filter-row mt-1">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="orders-search-input" placeholder="구매자명, 주문번호 검색..." oninput="app.renderOrdersList()">
+          </div>
+          <div>
+            <select id="orders-status-filter" onchange="app.renderOrdersList()">
+              <option value="All">전체 주문 상태</option>
+              <option value="Pending">소싱 대기 (Pending)</option>
+              <option value="Ordered">발주 완료 (Ordered)</option>
+              <option value="Arrived">사무실 입고 (Arrived)</option>
+              <option value="Shipped">배송 완료 (Shipped)</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- 주문 목록 테이블 -->
+        <div class="glass-card">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>주문 정보 (일자/번호)</th>
+                  <th>고객 (국가)</th>
+                  <th>상품 정보</th>
+                  <th>소싱상태</th>
+                  <th>배송정보 (EMS 프리미엄)</th>
+                  <th>총 매출 (수익)</th>
+                  <th>작업</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body">
+                <!-- JS에서 주문 테이블 행 동적 생성 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. SETTINGS VIEW ================= -->
+      <section id="view-settings" class="page-view hidden">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>시스템 설정</h1>
+            <p>환율, Etsy 수수료, 우체국 EMS 프리미엄 구역별 요금표 세부 설정</p>
+          </div>
+        </div>
+        
+        <div class="form-grid mt-1">
+          <!-- 기본 비즈니스 설정 -->
+          <div class="glass-card">
+            <div class="card-title">기본 비즈니스 요율 및 수수료 설정</div>
+            <form id="settings-basic-form" onsubmit="app.saveSettings(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="set-exchange-rate">적용 환율 (USD to KRW)</label>
+                  <div class="input-suffix-wrapper">
+                    <input type="number" id="set-exchange-rate" step="0.1" required>
+                    <span class="input-suffix">KRW</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="set-transaction-fee">Etsy 거래 수수료 (Transaction Fee)</label>
+                  <div class="input-suffix-wrapper">
+                    <input type="number" id="set-transaction-fee" step="0.01" required>
+                    <span class="input-suffix">%</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="set-listing-fee">Etsy 리스팅 수수료 (Listing Fee)</label>
+                  <div class="input-suffix-wrapper">
+                    <input type="number" id="set-listing-fee" step="0.01" required>
+                    <span class="input-suffix">USD</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="set-payment-percent">Etsy 결제 대행 수수료 (%)</label>
+                  <div class="input-suffix-wrapper">
+                    <input type="number" id="set-payment-percent" step="0.01" required>
+                    <span class="input-suffix">%</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="set-payment-fixed">Etsy 결제 대행 수수료 (고정)</label>
+                  <div class="input-suffix-wrapper">
+                    <input type="number" id="set-payment-fixed" required>
+                    <span class="input-suffix">KRW</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="set-offsite-ads-fee">Etsy 오프사이트 광고비 비율 (선택)</label>
+                  <select id="set-offsite-ads-fee">
+                    <option value="0">광고 미참여 (0%)</option>
+                    <option value="12">스탠다드 광고 (12%)</option>
+                    <option value="15">신규/소형 샵 광고 (15%)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mt-2 text-green" id="settings-save-success" style="display:none; font-size: 0.9rem;">설정이 성공적으로 저장되었습니다!</div>
+              <div class="mt-1">
+                <button type="submit" class="btn btn-primary">설정 저장</button>
+              </div>
+            </form>
+          </div>
+          
+          <!-- 데이터 백업 및 북마크클릿 안내 -->
+          <div class="glass-card">
+            <div class="card-title">데이터 백업 / 복원 및 원격 수집 도구</div>
+            <div style="display:flex; flex-direction:column; gap:1.25rem;">
+              <div>
+                <h3 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent-cyan);">브라우저 데이터 관리</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; line-height: 1.4;">
+                  SaaS 데이터는 브라우저 캐시 삭제 시 소멸할 수 있으므로, 주기적으로 오프라인 PC에 안전하게 내보내 주시기 바랍니다.
+                </p>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn btn-secondary" onclick="app.backupData()">데이터 내보내기 (JSON)</button>
+                  <button class="btn btn-secondary" onclick="document.getElementById('import-file-input').click()">데이터 복원 (JSON)</button>
+                  <input type="file" id="import-file-input" style="display:none;" accept=".json" onchange="app.restoreData(event)">
+                </div>
+              </div>
+              
+              <div class="bookmarklet-box">
+                <h3 style="font-size: 0.9rem; margin-bottom: 0.25rem;">PrintBakery 원클릭 수집 북마크클릿</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.5rem;">
+                  아래 핑크 버튼을 마우스로 드래그하여 브라우저의 <strong>북마크바(책갈피바)</strong>에 놓으세요. 
+                  PrintBakery 상품 상세 페이지에서 해당 북마크를 클릭하면 상품 정보가 자동으로 소싱 관리 폼에 입력됩니다.
+                </p>
+                <a href="#" class="bookmarklet-btn-install" id="bookmarklet-link" onclick="event.preventDefault()">Seoul Bakery 수집기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EMS 프리미엄 요율 구성 편집기 -->
+        <div class="glass-card mt-1">
+          <div class="card-title">우체국 EMS 프리미엄 구간 요금 편집기 (원화 KRW 기준)</div>
+          <div class="rates-editor-container">
+            <div class="rates-tabs" id="rates-editor-tabs">
+              <!-- JS에서 각 구역 탭 생성 -->
+            </div>
+            
+            <div class="rates-table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>무게 스텝 (kg)</th>
+                    <th>적용 요금 (KRW)</th>
+                  </tr>
+                </thead>
+                <tbody id="rates-editor-table-body">
+                  <!-- JS에서 무게별 요금 입력 필드 생성 -->
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="flex-between">
+              <span class="text-muted" style="font-size: 0.8rem;">* 요금 수정 후 반드시 하단 저장 버튼을 클릭해 주세요.</span>
+              <button class="btn btn-primary" onclick="app.saveEmsRates()">요금표 변경 저장</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ================= MODALS CONTAINER ================= -->
+  
+  <!-- 1. PRODUCT ADD / EDIT MODAL -->
+  <div class="modal-overlay" id="modal-product">
+    <div class="modal-container glass-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="product-modal-title">소싱 상품 신규 등록</h2>
+        <button class="modal-close" onclick="app.closeProductModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="product-form" onsubmit="app.saveProduct(event)">
+          <input type="hidden" id="prod-id">
+          
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="prod-url">PrintBakery 상품 주소 (URL)</label>
+              <input type="url" id="prod-url" placeholder="https://www.printbakery.com/goods/..." onchange="app.handleUrlAutofill(this.value)">
+            </div>
+            
+            <div class="form-group">
+              <label for="prod-title-ko">상품 한글명 (Ko)</label>
+              <input type="text" id="prod-title-ko" required placeholder="예: 달항아리 소형 액자">
+            </div>
+            <div class="form-group">
+              <label for="prod-title-en">Etsy 노출 영문명 (En)</label>
+              <input type="text" id="prod-title-en" required placeholder="Etsy에 업로드할 영문 타이틀">
+            </div>
+            
+            <div class="form-group">
+              <label for="prod-artist">작가명 (Artist)</label>
+              <input type="text" id="prod-artist" required placeholder="예: 민병훈">
+            </div>
+            <div class="form-group">
+              <label for="prod-price-krw">PrintBakery 소싱 원가 (원)</label>
+              <div class="input-suffix-wrapper">
+                <input type="number" id="prod-price-krw" required oninput="app.calculateProductPricePreview()">
+                <span class="input-suffix">KRW</span>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="prod-weight">박스 포함 실제 무게 (kg)</label>
+              <div class="input-suffix-wrapper">
+                <input type="number" id="prod-weight" step="0.01" required oninput="app.calculateProductPricePreview()">
+                <span class="input-suffix">kg</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>패키지 포장 크기 (가로 x 세로 x 높이)</label>
+              <div style="display: flex; gap: 0.35rem;">
+                <input type="number" id="prod-width" placeholder="가로" style="width: 33%;" required oninput="app.calculateProductPricePreview()">
+                <input type="number" id="prod-length" placeholder="세로" style="width: 33%;" required oninput="app.calculateProductPricePreview()">
+                <input type="number" id="prod-height" placeholder="높이" style="width: 33%;" required oninput="app.calculateProductPricePreview()">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="prod-target-margin">원가 대비 목표 순이익 비율 (Markup %)</label>
+              <div class="input-suffix-wrapper">
+                <input type="number" id="prod-target-margin" step="1" value="100" required oninput="app.calculateProductPricePreview()">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="prod-status">상품 판매 상태</label>
+              <select id="prod-status">
+                <option value="Active">Etsy 판매중 (Active)</option>
+                <option value="Draft">작성중 (Draft)</option>
+                <option value="Out of Stock">품절 (Out of Stock)</option>
+              </select>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="prod-img">상품 대표 이미지 링크 (URL)</label>
+              <input type="url" id="prod-img" placeholder="https://images.unsplash.com/...">
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="prod-notes">소싱 및 패키징 메모</label>
+              <textarea id="prod-notes" rows="2" placeholder="작가의 한정판 사인 있음, 깨지기 쉬움 등 특이사항 기록"></textarea>
+            </div>
+          </div>
+          
+          <!-- 실시간 마진/배송비 계산 미리보기 카드 -->
+          <div class="calc-preview-card">
+            <div class="calc-title">실시간 가격 계산 시뮬레이션 (수출지: 미국 Zone 3 기준)</div>
+            <div class="calc-row">
+              <span>부피중량 (Volumetric Weight):</span>
+              <span id="calc-vol-weight">0.00 kg</span>
+            </div>
+            <div class="calc-row">
+              <span>적용 청구 무게 (Chargeable Weight):</span>
+              <span class="text-pink" id="calc-charge-weight">0.0 kg</span>
+            </div>
+            <div class="calc-row">
+              <span>예상 EMS 프리미엄 배송비:</span>
+              <span id="calc-ems-cost">0 원</span>
+            </div>
+            <div class="calc-row">
+              <span>Etsy 관련 총 수수료 (가맹/대행):</span>
+              <span id="calc-etsy-fee">0 원</span>
+            </div>
+            <div class="calc-row highlight">
+              <span>최소 손익분기점 (Break-even):</span>
+              <span id="calc-break-even">0 원</span>
+            </div>
+            <div class="calc-row highlight usd">
+              <span>권장 Etsy 판매가 (마진 반영):</span>
+              <span id="calc-etsy-price">$0.00</span>
+            </div>
+            
+            <!-- 시각화 바 차트 -->
+            <div class="calc-visual-bar">
+              <div class="bar-segment bar-sourcing" id="bar-sourcing" style="width: 25%"></div>
+              <div class="bar-segment bar-shipping" id="bar-shipping" style="width: 25%"></div>
+              <div class="bar-segment bar-fees" id="bar-fees" style="width: 25%"></div>
+              <div class="bar-segment bar-profit" id="bar-profit" style="width: 25%"></div>
+            </div>
+            <div class="calc-legend">
+              <div class="legend-item"><span class="legend-dot bar-sourcing"></span> 원가: <span id="leg-sourcing">0%</span></div>
+              <div class="legend-item"><span class="legend-dot bar-shipping"></span> 배송비: <span id="leg-shipping">0%</span></div>
+              <div class="legend-item"><span class="legend-dot bar-fees"></span> 수수료: <span id="leg-fees">0%</span></div>
+              <div class="legend-item"><span class="legend-dot bar-profit"></span> 마진수익: <span id="leg-profit">0%</span></div>
+            </div>
+          </div>
+          
+          <div class="mt-2" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="app.closeProductModal()">취소</button>
+            <button type="submit" class="btn btn-primary">상품 저장</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. PRODUCT DETAIL / LISTING COPY ASSISTANT MODAL -->
+  <div class="modal-overlay" id="modal-product-detail">
+    <div class="modal-container glass-card" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="detail-modal-title">상품 상세 정보 및 Etsy 리스팅 메타</h2>
+        <button class="modal-close" onclick="app.closeProductDetailModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="listing-assistant-grid">
+          <div>
+            <img id="detail-img" class="product-card-img" style="height: 220px;" src="" alt="상품 이미지">
+            <div class="exchange-widget mt-1">
+              <span class="exchange-title">PrintBakery 원문 요약</span>
+              <div style="font-size: 0.85rem; line-height: 1.6; margin-top: 0.25rem;">
+                <strong>작가:</strong> <span id="detail-artist"></span><br>
+                <strong>원가(KRW):</strong> <span id="detail-price-krw"></span> 원<br>
+                <strong>부피 무게:</strong> <span id="detail-size"></span> (<span id="detail-vol-weight"></span> kg)<br>
+                <strong>실제 무게:</strong> <span id="detail-actual-weight"></span> kg<br>
+                <strong>링크:</strong> <a id="detail-pb-link" href="#" target="_blank" class="text-cyan" style="word-break: break-all;">바로가기 ↗</a>
+              </div>
+            </div>
+            
+            <div class="glass-card mt-1" style="padding: 1rem; border-color: var(--primary-glow);">
+              <span class="exchange-title text-pink">미국 직배송 마진율 분석</span>
+              <div style="font-size: 0.85rem; line-height: 1.6; margin-top: 0.25rem;">
+                <strong>추천 Etsy 판매가:</strong> <span class="text-cyan font-weight-bold" id="detail-etsy-price" style="font-weight: 700;"></span><br>
+                <strong>예상 EMS 배송비:</strong> <span id="detail-ems-cost"></span> 원<br>
+                <strong>Etsy 수수료 총합:</strong> <span id="detail-etsy-fees"></span>원<br>
+                <strong>순이익 (KRW):</strong> <span class="text-green" id="detail-net-profit" style="font-weight: 700;"></span> 원 (수익률 <span id="detail-margin-percent"></span>)
+              </div>
+            </div>
+
+            <div class="glass-card mt-1" style="padding: 1rem; border-color: var(--primary-glow);" id="detail-packing-tip-card">
+              <span class="exchange-title text-pink">📦 AI 배송 포장 가이드 & 메모</span>
+              <div style="font-size: 0.82rem; line-height: 1.5; margin-top: 0.4rem; color: var(--text-muted);" id="detail-packing-tip-content">
+                <!-- dynamic packing tip and notes -->
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <!-- Etsy 복사 보조도구 -->
+            <div class="copy-box">
+              <div class="copy-box-header">
+                <span>Etsy Product Title (영문 타이틀)</span>
+                <button class="btn btn-secondary btn-icon-only" style="padding: 0.2rem 0.5rem;" onclick="app.copyToClipboard('copy-etsy-title')">Copy</button>
+              </div>
+              <div class="copy-box-body" id="copy-etsy-title"></div>
+            </div>
+            
+            <div class="copy-box">
+              <div class="copy-box-header">
+                <span>Etsy Product Description (상세페이지 영문설명)</span>
+                <button class="btn btn-secondary btn-icon-only" style="padding: 0.2rem 0.5rem;" onclick="app.copyToClipboard('copy-etsy-desc')">Copy</button>
+              </div>
+              <div class="copy-box-body" id="copy-etsy-desc"></div>
+            </div>
+            
+            <div class="copy-box">
+              <div class="copy-box-header">
+                <span>Etsy Tags (추천 태그 - 13개)</span>
+                <button class="btn btn-secondary btn-icon-only" style="padding: 0.2rem 0.5rem;" onclick="app.copyToClipboard('copy-etsy-tags')">Copy CSV</button>
+              </div>
+              <div class="copy-box-body" id="copy-etsy-tags-container" style="max-height: 80px;"></div>
+              <span id="copy-etsy-tags" style="display:none;"></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-2" style="display: flex; justify-content: space-between; gap: 0.5rem;">
+          <button class="btn btn-danger" id="detail-delete-btn" onclick="app.deleteProductFromDetail()">소싱 삭제</button>
+          <div>
+            <button class="btn btn-secondary" onclick="app.closeProductDetailModal()">닫기</button>
+            <button class="btn btn-primary" id="detail-edit-btn" onclick="app.editProductFromDetail()">수정하기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ETSY ORDER ADD / EDIT MODAL -->
+  <div class="modal-overlay" id="modal-order">
+    <div class="modal-container glass-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="order-modal-title">Etsy 주문 정보 등록</h2>
+        <button class="modal-close" onclick="app.closeOrderModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="order-form" onsubmit="app.saveOrder(event)">
+          <input type="hidden" id="order-id">
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="order-date">주문 접수일</label>
+              <input type="date" id="order-date" required>
+            </div>
+            <div class="form-group">
+              <label for="order-buyer-name">구매자 성명 (English)</label>
+              <input type="text" id="order-buyer-name" required placeholder="예: Oliver Twist">
+            </div>
+            <div class="form-group">
+              <label for="order-buyer-email">구매자 이메일</label>
+              <input type="email" id="order-buyer-email" placeholder="customer@email.com">
+            </div>
+            <div class="form-group">
+              <label for="order-country">도착 국가 (EMS 프리미엄용)</label>
+              <select id="order-country" required onchange="app.handleOrderCountryChange(this.value)">
+                <!-- JS에서 동적 바인딩 -->
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label for="order-address">구매자 영문 주소 (Full Address)</label>
+              <input type="text" id="order-address" required placeholder="영문 배송 주소 전체 입력">
+            </div>
+            
+            <div class="form-group">
+              <label for="order-item-id">연동 소싱 상품</label>
+              <select id="order-item-id" required onchange="app.handleOrderProductChange(this.value)">
+                <!-- JS에서 동적 바인딩 -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="order-qty">수량 (Quantity)</label>
+              <input type="number" id="order-qty" value="1" min="1" required oninput="app.calculateOrderPricePreview()">
+            </div>
+            
+            <div class="form-group">
+              <label for="order-sale-usd">Etsy 판매 가격 (배송비 포함 USD)</label>
+              <div class="input-suffix-wrapper">
+                <input type="number" id="order-sale-usd" step="0.01" required oninput="app.calculateOrderPricePreview()">
+                <span class="input-suffix">USD</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="order-tracking">우체국 EMS 프리미엄 송장번호</label>
+              <input type="text" id="order-tracking" placeholder="UPXXXXXXXXXKR (택배 수령 시 입력)">
+            </div>
+            
+            <div class="form-group">
+              <label for="order-sourcing-status">소싱 발주 단계</label>
+              <select id="order-sourcing-status">
+                <option value="Pending">소싱 대기 (Pending)</option>
+                <option value="Ordered">발주 완료 (Ordered)</option>
+                <option value="Arrived">사무실 입고 (Arrived)</option>
+                <option value="Shipped">배송 완료 (Shipped)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="order-shipping-status">우체국 배송 상태</label>
+              <select id="order-shipping-status">
+                <option value="Ready">발송 준비 (Ready)</option>
+                <option value="Shipped">해외 발송 완료 (Shipped)</option>
+                <option value="Delivered">배송 완료 (Delivered)</option>
+              </select>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="order-notes">주문 개별 요구사항 메모</label>
+              <textarea id="order-notes" rows="2" placeholder="선물 포장 리본 필수, 특별 통관 정보 기재 등"></textarea>
+            </div>
+          </div>
+          
+          <!-- 해당 주문의 실시간 마진/원화 환산 미리보기 카드 -->
+          <div class="calc-preview-card">
+            <div class="calc-title">이 주문의 마진 분석 실시간 결과</div>
+            <div class="calc-row">
+              <span>도착 구역 및 예상 배송비:</span>
+              <span id="order-calc-ems"><span id="order-calc-zone">Zone 3</span> / 0 원</span>
+            </div>
+            <div class="calc-row">
+              <span>Etsy 예상 총 수수료:</span>
+              <span id="order-calc-fees">0 원</span>
+            </div>
+            <div class="calc-row highlight">
+              <span>예상 순이익 (Net Profit):</span>
+              <span id="order-calc-profit">0 원</span>
+            </div>
+          </div>
+          
+          <div class="mt-2" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="app.closeOrderModal()">취소</button>
+            <button type="submit" class="btn btn-primary">주문 정보 저장</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. CUSTOMS CN22/CN23 INVOICE GENERATOR MODAL -->
+  <div class="modal-overlay" id="modal-invoice">
+    <div class="modal-container glass-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2 class="modal-title">우체국 EMS 프리미엄 접수용 세관신고서 작성 도우미</h2>
+        <button class="modal-close" onclick="app.closeInvoiceModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+          인터넷 우체국 EMS 프리미엄(UPS) 접수 화면에서 편리하게 복사하여 붙여넣을 수 있는 정형화된 텍스트 템플릿입니다.
+        </p>
+        
+        <div class="copy-box">
+          <div class="copy-box-header">
+            <span>수취인 주소 및 배송 데이터 (Receiver Details)</span>
+            <button class="btn btn-secondary btn-icon-only" style="padding: 0.2rem 0.5rem;" onclick="app.copyToClipboard('copy-receiver-details')">Copy</button>
+          </div>
+          <div class="copy-box-body" id="copy-receiver-details"></div>
+        </div>
+        
+        <div class="copy-box">
+          <div class="copy-box-header">
+            <span>세관 신고 내역 (Customs Items - CN23)</span>
+            <button class="btn btn-secondary btn-icon-only" style="padding: 0.2rem 0.5rem;" onclick="app.copyToClipboard('copy-customs-details')">Copy</button>
+          </div>
+          <div class="copy-box-body" id="copy-customs-details"></div>
+        </div>
+        
+        <div class="mt-2" style="display: flex; justify-content: flex-end;">
+          <button class="btn btn-secondary" onclick="app.closeInvoiceModal()">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. STANDALONE SHIPPING CALCULATOR MODAL -->
+  <div class="modal-overlay" id="modal-shipping-calc">
+    <div class="modal-container glass-card" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 class="modal-title">우체국 EMS 프리미엄 간이 요금 계산기</h2>
+        <button class="modal-close" onclick="app.closeShippingCalcModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div class="form-group">
+            <label for="sc-country">도착 국가 선택</label>
+            <select id="sc-country" onchange="app.runStandaloneShippingCalc()">
+              <!-- JS에서 국가 리스트 동적 추가 -->
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="sc-weight">실제 중량 (kg)</label>
+            <div class="input-suffix-wrapper">
+              <input type="number" id="sc-weight" step="0.01" value="1.0" oninput="app.runStandaloneShippingCalc()">
+              <span class="input-suffix">kg</span>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>포장 박스 외경 치수 (cm)</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="number" id="sc-width" value="30" placeholder="가로" style="width:33%;" oninput="app.runStandaloneShippingCalc()">
+              <input type="number" id="sc-length" value="30" placeholder="세로" style="width:33%;" oninput="app.runStandaloneShippingCalc()">
+              <input type="number" id="sc-height" value="10" placeholder="높이" style="width:33%;" oninput="app.runStandaloneShippingCalc()">
+            </div>
+          </div>
+          
+          <div class="calc-preview-card" style="background: rgba(6, 182, 212, 0.05); border-color: rgba(6, 182, 212, 0.2);">
+            <div class="calc-title" style="color: var(--accent-cyan);">계산된 배송 정보</div>
+            <div class="calc-row">
+              <span>적용 구역 (Zone):</span>
+              <span id="sc-res-zone">Zone 1</span>
+            </div>
+            <div class="calc-row">
+              <span>박스 부피 중량:</span>
+              <span id="sc-res-vol-weight">0.00 kg</span>
+            </div>
+            <div class="calc-row">
+              <span>청구 적용 중량:</span>
+              <span id="sc-res-charge-weight" style="font-weight: 700; color: var(--primary);">0.0 kg</span>
+            </div>
+            <div class="calc-row highlight" style="color: var(--accent-cyan); border-color: rgba(255,255,255,0.05);">
+              <span>예상 요금 (KRW):</span>
+              <span id="sc-res-cost">0 원</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-2" style="display: flex; justify-content: flex-end;">
+          <button class="btn btn-secondary" onclick="app.closeShippingCalcModal()">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 6. BOOKMARKLET MANUAL MODAL -->
+  <div class="modal-overlay" id="modal-bookmarklet">
+    <div class="modal-container glass-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2 class="modal-title">PrintBakery 수집용 북마크클릿 설치 및 사용 가이드</h2>
+        <button class="modal-close" onclick="app.closeBookmarkletModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.9rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1rem;">
+        <p>
+          <strong>Bookmarklet (북마크클릿)</strong> 이란 브라우저의 책갈피바에 저장해 두고 필요할 때 클릭하여 실행하는 미니 스크립트 도구입니다. 
+          별도의 확장 프로그램 설치 없이 CORS 제약을 우회하여 PrintBakery의 상품 상세 정보를 손쉽게 수집할 수 있습니다.
+        </p>
+        
+        <div class="bookmarklet-box" style="margin-top: 0; padding: 1.25rem;">
+          <h3 style="font-size: 0.9rem; margin-bottom: 0.25rem;">설정 단계:</h3>
+          <ol style="margin-left: 1.25rem; font-size: 0.85rem;">
+            <li>브라우저 상단에서 북마크바(책갈피바)가 표시되도록 설정합니다. (단축키: Chrome 기준 <code>Ctrl+Shift+B</code> 또는 <code>Cmd+Shift+B</code>)</li>
+            <li>아래 핑크색 버튼을 <strong>마우스 왼쪽 버튼으로 길게 클릭한 채로 브라우저의 북마크바로 드래그 앤 드롭</strong>(끌어다 놓기) 하세요.</li>
+          </ol>
+          <div style="text-align: center;">
+            <a href="#" class="bookmarklet-btn-install" id="bookmarklet-modal-link" onclick="event.preventDefault()">Seoul Bakery 수집기</a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--primary);">사용 방법:</h3>
+          <ol style="margin-left: 1.25rem; font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.25rem;">
+            <li><a href="https://www.printbakery.com" target="_blank" class="text-cyan">PrintBakery 사이트</a>에 접속하여 원하는 판화, 액자 등 소싱하고 싶은 상품 페이지로 이동합니다.</li>
+            <li>상세페이지가 완전히 로딩된 후, 북마크바에 설치해 둔 <strong>[Seoul Bakery 수집기]</strong>를 누릅니다.</li>
+            <li>새 탭이 열리며 본 SaaS 사이트로 이동하고, 수집한 <u>상품 주소, 타이틀(한글), 원가, 작가, 대표 이미지</u> 등이 자동으로 입력된 신규 소싱 양식이 팝업됩니다.</li>
+            <li>사용자는 영어 타이틀, 포장 박스 무게 및 크기를 마저 채우고 [저장]만 누르면 등록이 끝납니다!</li>
+          </ol>
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+          <button class="btn btn-secondary" onclick="app.closeBookmarkletModal()">안내 닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- TOAST NOTIFICATION FOR COPY -->
+  <div class="copied-toast" id="copied-toast">클립보드에 복사되었습니다!</div>
+
+  <!-- LOADING RESOURCES -->
+  <script src="js/ems_rates.js?v=2"></script>
+  <script src="js/db.js?v=2"></script>
+  <script src="js/app.js?v=2"></script>
+</body>
+</html>
+
